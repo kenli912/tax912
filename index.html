@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>香港個人薪俸稅計算器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+    <div class="max-w-5xl mx-auto px-4 py-10">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl font-bold mb-2">香港個人薪俸稅計算器</h1>
+            <p class="text-gray-600">2025/26 課稅年度</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Input Section -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Income Card -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="border-b border-gray-200 px-6 py-4">
+                        <h2 class="text-lg font-semibold">收入資料</h2>
+                    </div>
+                    <div class="p-6 space-y-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="space-y-2">
+                                <label for="monthlyIncome" class="block text-sm font-medium text-gray-700">月薪 (HKD)</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">$</span>
+                                    <input type="number" id="monthlyIncome" class="form-input pl-8 pr-4 py-2 w-full rounded-md border border-gray-300 focus:border-black focus:ring-1 focus:ring-black" placeholder="每月收入" value="0">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label for="monthsWorked" class="block text-sm font-medium text-gray-700">工作月數</label>
+                                <input type="number" id="monthsWorked" class="form-input py-2 w-full rounded-md border border-gray-300 focus:border-black focus:ring-1 focus:ring-black" placeholder="工作月數" value="12" min="1" max="12">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="space-y-2">
+                                <label for="doublePay" class="block text-sm font-medium text-gray-700">雙糧 (HKD)</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">$</span>
+                                    <input type="number" id="doublePay" class="form-input pl-8 pr-4 py-2 w-full rounded-md border border-gray-300 focus:border-black focus:ring-1 focus:ring-black" placeholder="雙糧金額" value="0">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label for="bonus" class="block text-sm font-medium text-gray-700">花紅 (HKD)</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">$</span>
+                                    <input type="number" id="bonus" class="form-input pl-8 pr-4 py-2 w-full rounded-md border border-gray-300 focus:border-black focus:ring-1 focus:ring-black" placeholder="花紅金額" value="0">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="deductions" class="block text-sm font-medium text-gray-700">扣除項目總額 (強積金、慈善捐款等)</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">$</span>
+                                <input type="number" id="deductions" class="form-input pl-8 pr-4 py-2 w-full rounded-md border border-gray-300 focus:border-black focus:ring-1 focus:ring-black" placeholder="扣除項目" value="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personal Status Card -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="border-b border-gray-200 px-6 py-4">
+                        <h2 class="text-lg font-semibold">個人狀況</h2>
+                    </div>
+                    <div class="p-6 space-y-5">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">婚姻狀況</label>
+                            <div class="flex space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="maritalStatus" value="single" class="form-radio text-black" checked>
+                                    <span class="ml-2">單身</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="maritalStatus" value="married" class="form-radio text-black">
+                                    <span class="ml-2">已婚</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <label class="block text-sm font-medium text-gray-700">子女數目</label>
+                                <button type="button" id="addChild" class="text-sm text-black font-medium hover:text-gray-700">+ 新增子女</button>
+                            </div>
+                            <div id="childrenContainer" class="space-y-3"></div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <label class="block text-sm font-medium text-gray-700">供養父母/祖父母</label>
+                                <button type="button" id="addParent" class="text-sm text-black font-medium hover:text-gray-700">+ 新增供養父母</button>
+                            </div>
+                            <div id="parentsContainer" class="space-y-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div>
+                <div class="sticky top-6">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+                        <div class="border-b border-gray-200 px-6 py-4">
+                            <h2 class="text-lg font-semibold">稅務摘要</h2>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                                <span class="text-sm text-gray-600">總收入</span>
+                                <span id="totalIncome" class="font-medium">$0</span>
+                            </div>
+                            <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                                <span class="text-sm text-gray-600">扣除額</span>
+                                <span id="totalDeductions" class="font-medium">$0</span>
+                            </div>
+                            <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                                <span class="text-sm text-gray-600">入息淨額</span>
+                                <span id="netIncome" class="font-medium">$0</span>
+                            </div>
+                            <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                                <span class="text-sm text-gray-600">免稅額總額</span>
+                                <span id="totalAllowances" class="font-medium">$0</span>
+                            </div>
+                            <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                                <span class="text-sm text-gray-600">應課稅入息實額</span>
+                                <span id="taxableIncome" class="font-medium">$0</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-600">計稅方式</span>
+                                <span id="taxMethod" class="font-medium">累進稅率</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900 text-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="p-6 space-y-4">
+                            <div class="flex justify-between items-center pb-3 border-b border-gray-700">
+                                <span class="font-medium">計算稅款</span>
+                                <span id="calculatedTax" class="text-xl font-semibold">$0</span>
+                            </div>
+                            <div class="flex justify-between items-center pb-3 border-b border-gray-700">
+                                <span class="font-medium">稅款寬減 (100%, 上限$1,500)</span>
+                                <span id="taxReduction" class="text-xl font-semibold">$0</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium">應繳稅款</span>
+                                <span id="finalTax" class="text-2xl font-bold">$0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="calculateBtn" class="mt-6 w-full py-3 px-4 bg-gray-900 hover:bg-black text-white font-medium rounded-lg transition">
+                        計算稅款
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="mt-16 text-center text-sm text-gray-500">
+            <p class="mb-2">注意：本計算器僅作參考用途，實際稅款以稅務局評估為準。稅務計算基於2025/26課稅年度標準。</p>
+            <p><a href="https://flowith.net" target="_blank" class="text-black font-medium hover:underline">Built with Flowith Oracle.</a></p>
+        </footer>
+    </div>
+
+    <script src="calculator.js"></script>
+    <script src="script.js"></script>
+    <script>
+        window.addEventListener("wheel", (e)=> {
+            const isPinching = e.ctrlKey
+            if(isPinching) e.preventDefault()
+        }, { passive: false })
+    </script>
+</body>
+</html>
